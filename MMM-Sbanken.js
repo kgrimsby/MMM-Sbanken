@@ -260,8 +260,6 @@ Module.register("MMM-Sbanken", {
                         if (showOnlyExpensesInTransactions) {
                             if(transaction.amount < 0) {
                                 noExpenses = false;
-				Log.info('TRANSACTION!!!')
-				Log.info(transaction.amount)
                                 transactionLines.push(self.getAccountLine(label, Intl.NumberFormat('fr-FR').format(parseFloat(transaction.amount).toFixed(0))));
                             }
                         } else {
