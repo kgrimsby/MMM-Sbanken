@@ -190,7 +190,7 @@ Module.register("MMM-Sbanken", {
 
             if (blnDisplayAllAccounts || aryShowAccounts.includes(accountNumber)) {
                 label = labelAlias[accountNumber] ? labelAlias[accountNumber] : account.name;
-                content.appendChild(self.getAccountLine(label, account.balance.toFixed(numberOfDecimals)));
+                content.appendChild(self.getAccountLine(label, Intl.NumberFormat('fr-FR').format(account.available.toFixed(numberOfDecimals))));
             }
         });
         return diffSum;
@@ -249,7 +249,8 @@ Module.register("MMM-Sbanken", {
             if (transactions[accountNumber] && transactions[accountNumber].items) {
                 transactions[accountNumber].items.forEach (function(transaction) {
                     // accountingDate vs interestDate
-                    if (moment(transaction.interestDate).isSame(moment(today)) && transaction.source !== 'Archive') {
+                    //if (moment(transaction.interestDate).isSame(moment(today)) && transaction.source !== 'Archive') {
+		    if (true) {
                         let label = transaction.text.toLowerCase();
                         label = label.replace(/ nok | kurs|\d|\*|:|\./g, '').trim();
                         label = label.charAt(0).toUpperCase() + label.slice(1);
@@ -259,7 +260,9 @@ Module.register("MMM-Sbanken", {
                         if (showOnlyExpensesInTransactions) {
                             if(transaction.amount < 0) {
                                 noExpenses = false;
-                                transactionLines.push(self.getAccountLine(label, transaction.amount));
+				Log.info('TRANSACTION!!!')
+				Log.info(transaction.amount)
+                                transactionLines.push(self.getAccountLine(label, Intl.NumberFormat('fr-FR').format(parseFloat(transaction.amount).toFixed(0))));
                             }
                         } else {
                             noExpenses = false;
@@ -281,6 +284,8 @@ Module.register("MMM-Sbanken", {
             this.displaySalary(content);
         }
 
+	Log.info(transactionLines.slice(0, 5))
+
         if (this.config.showTransactionsToday) {
             if (noExpenses) {
                 content.appendChild(this.getInfoLine('&#10003; ' + this.config.noTransactionsLabel));
@@ -289,7 +294,7 @@ Module.register("MMM-Sbanken", {
                 if (this.config.todayTransactionsHeader) {
                     content.appendChild(this.getInfoLine(this.config.todayTransactionsHeader));
                 }
-                transactionLines.forEach(function(transaction) {
+                transactionLines.slice(0, 5).forEach(function(transaction) {
                     content.appendChild(transaction);
                 });
             }

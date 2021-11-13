@@ -1,5 +1,6 @@
 const request = require('request');
 const node_helper = require("node_helper");
+const Log = require("logger");
 
 module.exports = node_helper.create({
     socketNotificationReceived: function (notification, payload) {
@@ -15,6 +16,7 @@ module.exports = node_helper.create({
                 'client_secret': encodeURI(payload.config.clientSecret),
                 'grant_type': 'client_credentials'
             };
+
             request({
                 method: 'POST',
                 uri: url,
@@ -44,6 +46,9 @@ module.exports = node_helper.create({
                 } else {
                     returnData = getError(response.statusCode);
                 }
+
+		returnData.items = returnData.items.filter(function (d) { return payload.config.displayOnlyAccounts.includes(parseInt(d.accountNumber)); })
+
                 self.sendSocketNotification("BANK_ACCOUNTS", returnData);
             });
         }
@@ -109,6 +114,7 @@ module.exports = node_helper.create({
                         let headers = {
                             'Authorization': 'Bearer ' + payload.token.access_token,
                         };
+			
                         request({
                             method: 'GET',
                             uri: url,
@@ -117,6 +123,7 @@ module.exports = node_helper.create({
                             if (!error && response.statusCode === 200) {
                                 return resolve(JSON.parse(body));
                             } else {
+				//Log.error(error)
                                 reject(accountId);
                             }
                         });
