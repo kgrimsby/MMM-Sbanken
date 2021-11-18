@@ -143,10 +143,10 @@ Module.register("MMM-Sbanken", {
         let accountContainer = document.createElement("div");
         accountContainer.className = 'sbanken-account-container';
         let labelContainer = document.createElement("div");
-        labelContainer.className = 'dimmed light small';
+        labelContainer.className = 'bright regular small';
         labelContainer.innerHTML = label;
         let balanceContainer = document.createElement("div");
-        balanceContainer.className = 'light small';
+        balanceContainer.className = 'bright light small';
         balanceContainer.innerHTML = sum;
         accountContainer.appendChild(labelContainer);
         accountContainer.appendChild(balanceContainer);
